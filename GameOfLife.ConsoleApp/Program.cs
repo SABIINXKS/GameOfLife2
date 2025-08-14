@@ -11,7 +11,7 @@ namespace GameOfLife.ConsoleApp
             while (true)
             {
                 Console.WriteLine("=== Game of Life === ");
-                int size = 0;
+                int size = 2;
 
                 while (true)
                 {
