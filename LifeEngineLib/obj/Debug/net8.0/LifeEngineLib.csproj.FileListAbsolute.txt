@@ -1,0 +1,12 @@
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\bin\Debug\net8.0\LifeEngineLib.deps.json
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\bin\Debug\net8.0\LifeEngineLib.dll
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\bin\Debug\net8.0\LifeEngineLib.pdb
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.AssemblyInfoInputs.cache
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.AssemblyInfo.cs
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.csproj.CoreCompileInputs.cache
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.sourcelink.json
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.dll
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\refint\LifeEngineLib.dll
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\LifeEngineLib.pdb
+C:\Users\Sabine.Petrovska\source\repos\GameOfLife2\LifeEngineLib\obj\Debug\net8.0\ref\LifeEngineLib.dll
