@@ -94,6 +94,8 @@ namespace GameOfLife.ConsoleApp
                     Console.Write(" ");
                 }
                 Console.WriteLine();
+
+                // comment 
             }
         }
     }
