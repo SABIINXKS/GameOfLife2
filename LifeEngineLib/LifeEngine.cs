@@ -45,6 +45,7 @@ namespace LifeEngineLib
             return count;
         }
 
+        // Count the number of live neighbors for a cell at (x, y)
         private int CountLiveNeighbors(int x, int y)
         {
             int count = 0;
@@ -57,6 +58,7 @@ namespace LifeEngineLib
                         if (Field[nx, ny]) count++;
                 }
             return count;
+            
         }
     }
 }
