@@ -5,7 +5,7 @@ namespace LifeEngineLib
     public class LifeEngine
     {
         public int Size { get; }
-        public bool[,] Field { get; private set; }
+        public bool[,] Field { get; set; }
 
         public LifeEngine(int size)
         {
