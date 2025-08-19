@@ -92,42 +92,6 @@ namespace GameOfLife.ConsoleApp
                 // Game loop: advances the simulation and listens for user input
                 while (true)
                 {
-                    // Check if user pressed a key
-                    if (Console.KeyAvailable)
-                    {
-                        var key = Console.ReadKey(true);
-
-                        if (key.Key == ConsoleKey.B)
-                        {
-                            // Save current game state before returning to menu
-                            var gameState = new GameState
-                            {
-                                Size = size,
-                                Field = engine.Field,
-                                Generation = generationCount
-                            };
-                            gameState.SaveToFile();
-
-                            Console.Clear();
-                            break; // Break out of game loop and return to main menu
-                        }
-                        else if (key.Key == ConsoleKey.Escape)
-                        {
-                            // Save current game state and exit application completely
-                            var gameState = new GameState
-                            {
-                                Size = size,
-                                Field = engine.Field,
-                                Generation = generationCount
-                            };
-                            gameState.SaveToFile();
-
-                            Console.WriteLine("Exiting game...");
-                            Thread.Sleep(1000);
-                            Environment.Exit(0); // Exit the app
-                        }
-                    }
-
                     // Advance to the next generation
                     engine.NextGeneration();
                     generationCount++;
@@ -142,8 +106,52 @@ namespace GameOfLife.ConsoleApp
                     Console.WriteLine($"\nLiving Cells: {livingCells}");
                     Console.WriteLine("Press 'b' to return to menu or 'Esc' to exit game.");
 
-                    // Wait 1 second before next generation update
-                    Thread.Sleep(1000);
+                    // Wait for key press or timeout (1 sekunde, pārbaude ik pēc 50 ms)
+                    int waitTime = 1000;
+                    int elapsed = 0;
+                    int interval = 50;
+
+                    bool breakLoop = false;
+                    while (elapsed < waitTime)
+                    {
+                        if (Console.KeyAvailable)
+                        {
+                            var key = Console.ReadKey(true);
+
+                            if (key.Key == ConsoleKey.B)
+                            {
+                                var gameState = new GameState
+                                {
+                                    Size = size,
+                                    Field = engine.Field,
+                                    Generation = generationCount
+                                };
+                                gameState.SaveToFile();
+
+                                Console.Clear();
+                                breakLoop = true;
+                                break;
+                            }
+                            else if (key.Key == ConsoleKey.Escape)
+                            {
+                                var gameState = new GameState
+                                {
+                                    Size = size,
+                                    Field = engine.Field,
+                                    Generation = generationCount
+                                };
+                                gameState.SaveToFile();
+
+                                Console.WriteLine("Exiting game...");
+                                Thread.Sleep(1000);
+                                Environment.Exit(0);
+                            }
+                        }
+                        Thread.Sleep(interval);
+                        elapsed += interval;
+                    }
+                    if (breakLoop)
+                        break;
                 }
             }
         }
