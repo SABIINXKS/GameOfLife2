@@ -87,7 +87,7 @@ namespace GameOfLife.ConsoleApp
 
                 Console.Clear();
                 Console.WriteLine($"Game of Life - Field size: {size}x{size}");
-                Console.WriteLine("Press 'b' to go back to menu.");
+                Console.WriteLine("Press 'b' to go back to menu or 'Esc' to exit game.");
 
                 // Game loop: advances the simulation and listens for user input
                 while (true)
@@ -96,6 +96,7 @@ namespace GameOfLife.ConsoleApp
                     if (Console.KeyAvailable)
                     {
                         var key = Console.ReadKey(true);
+
                         if (key.Key == ConsoleKey.B)
                         {
                             // Save current game state before returning to menu
@@ -109,6 +110,21 @@ namespace GameOfLife.ConsoleApp
 
                             Console.Clear();
                             break; // Break out of game loop and return to main menu
+                        }
+                        else if (key.Key == ConsoleKey.Escape)
+                        {
+                            // Save current game state and exit application completely
+                            var gameState = new GameState
+                            {
+                                Size = size,
+                                Field = engine.Field,
+                                Generation = generationCount
+                            };
+                            gameState.SaveToFile();
+
+                            Console.WriteLine("Exiting game...");
+                            Thread.Sleep(1000);
+                            Environment.Exit(0); // Exit the app
                         }
                     }
 
@@ -124,7 +140,7 @@ namespace GameOfLife.ConsoleApp
                     Console.WriteLine($"Game of Life - Generation {generationCount}");
                     ShowField(engine.Field, size);
                     Console.WriteLine($"\nLiving Cells: {livingCells}");
-                    Console.WriteLine("Press 'b' to return to menu.");
+                    Console.WriteLine("Press 'b' to return to menu or 'Esc' to exit game.");
 
                     // Wait 1 second before next generation update
                     Thread.Sleep(1000);
