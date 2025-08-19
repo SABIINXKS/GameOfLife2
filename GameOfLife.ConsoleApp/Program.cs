@@ -8,19 +8,16 @@ namespace GameOfLife.ConsoleApp
     {
         static void Main(string[] args)
         {
-            // Main loop to allow restarting or exiting the game
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("=== Game of Life ===");
 
-                // Attempt to load a previously saved game state from file
                 GameState loadedState = GameState.LoadFromFile();
                 bool useLoaded = false;
 
                 if (loadedState != null)
                 {
-                    // Ask the user if they want to continue the saved game
                     Console.WriteLine("Saved game found.");
                     Console.Write("Do you want to continue from the last saved game? (y/n): ");
                     string choice = Console.ReadLine()?.Trim().ToLower();
@@ -33,15 +30,13 @@ namespace GameOfLife.ConsoleApp
 
                 if (useLoaded)
                 {
-                    // Initialize game engine with loaded game state
                     size = loadedState.Size;
                     engine = new LifeEngine(size);
-                    engine.Field = loadedState.Field;          // Restore the saved field
-                    generationCount = loadedState.Generation; // Restore the saved generation count
+                    engine.Field = loadedState.Field;
+                    generationCount = loadedState.Generation;
                 }
                 else
                 {
-                    // No saved game loaded, prompt user to select field size
                     size = 0;
 
                     while (true)
@@ -58,10 +53,9 @@ namespace GameOfLife.ConsoleApp
                         if (input?.Trim().ToLower() == "b")
                         {
                             Console.WriteLine("Exiting program...");
-                            return; // Exit application
+                            return;
                         }
 
-                        // Parse user input and set field size accordingly
                         if (int.TryParse(input, out int choice))
                         {
                             size = choice switch
@@ -71,7 +65,7 @@ namespace GameOfLife.ConsoleApp
                                 3 => 30,
                                 _ => 10
                             };
-                            break; // Exit size selection loop
+                            break;
                         }
                         else
                         {
@@ -79,7 +73,6 @@ namespace GameOfLife.ConsoleApp
                         }
                     }
 
-                    // Create a new LifeEngine and initialize the game field
                     engine = new LifeEngine(size);
                     engine.InitializeField();
                     generationCount = 0;
@@ -87,18 +80,15 @@ namespace GameOfLife.ConsoleApp
 
                 Console.Clear();
                 Console.WriteLine($"Game of Life - Field size: {size}x{size}");
-                Console.WriteLine("Press 'b' to go back to menu.");
+                Console.WriteLine("Press 'b' to go back to menu. Press 'Esc' to exit immediately.");
 
-                // Game loop: advances the simulation and listens for user input
                 while (true)
                 {
-                    // Check if user pressed a key
                     if (Console.KeyAvailable)
                     {
                         var key = Console.ReadKey(true);
                         if (key.Key == ConsoleKey.B)
                         {
-                            // Save current game state before returning to menu
                             var gameState = new GameState
                             {
                                 Size = size,
@@ -108,38 +98,37 @@ namespace GameOfLife.ConsoleApp
                             gameState.SaveToFile();
 
                             Console.Clear();
-                            break; // Break out of game loop and return to main menu
+                            break;
+                        }
+                        else if (key.Key == ConsoleKey.Escape)
+                        {
+                            Console.WriteLine("Application stopped by user.");
+                            Environment.Exit(0);
                         }
                     }
 
-                    // Advance to the next generation
                     engine.NextGeneration();
                     generationCount++;
 
-                    // Count living cells for display
                     int livingCells = engine.GetLivingCellsCount();
 
-                    // Clear console and display current generation and field
                     Console.Clear();
                     Console.WriteLine($"Game of Life - Generation {generationCount}");
                     ShowField(engine.Field, size);
                     Console.WriteLine($"\nLiving Cells: {livingCells}");
-                    Console.WriteLine("Press 'b' to return to menu.");
+                    Console.WriteLine("Press 'b' to return to menu. Press 'Esc' to exit immediately.");
 
-                    // Wait 1 second before next generation update
                     Thread.Sleep(1000);
                 }
             }
         }
 
-        // Helper method to print the game field to the console
         static void ShowField(bool[,] field, int size)
         {
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    // Print '*' for living cells, '.' for dead cells
                     Console.Write(field[i, j] ? "*" : ".");
                     Console.Write(" ");
                 }
