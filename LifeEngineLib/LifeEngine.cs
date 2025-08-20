@@ -36,9 +36,10 @@ namespace LifeEngineLib
                 {
                     int neighbors = CountLiveNeighbors(i, j);
                     if (Field[i, j])
-                        next[i, j] = neighbors == 2 || neighbors == 3;
+                        next[i, j] = neighbors == LifeEngineConstants.SurvivalMinNeighbors
+                                     || neighbors == LifeEngineConstants.SurvivalMaxNeighbors;
                     else
-                        next[i, j] = neighbors == 3;
+                        next[i, j] = neighbors == LifeEngineConstants.BirthNeighbors;
                 }
             Field = next;
         }
