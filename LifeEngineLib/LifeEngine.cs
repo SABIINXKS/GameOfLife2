@@ -7,12 +7,19 @@ namespace LifeEngineLib
         public int Size { get; }
         public bool[,] Field { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the LifeEngine class with the specified field size.
+        /// </summary>
+        /// <param name="size">The size of the square game field.</param>
         public LifeEngine(int size)
         {
             Size = size;
             Field = new bool[size, size];
         }
 
+        /// <summary>
+        /// Randomly initializes the game field with living and dead cells.
+        /// </summary>
         public void InitializeField()
         {
             Random random = new Random();
@@ -58,7 +65,7 @@ namespace LifeEngineLib
                         if (Field[nx, ny]) count++;
                 }
             return count;
-            
+
         }
     }
 }
