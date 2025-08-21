@@ -13,6 +13,10 @@ public static class GameStateManager
         public int Generation { get; set; }
     }
 
+    /// <summary>
+    /// Saves the specified <see cref="GameState"/> to a JSON file.
+    /// </summary>
+    /// <param name="state">The game state to save.</param>
     public static void SaveToFile(GameState state)
     {
         var serializable = new SerializableState
@@ -34,6 +38,12 @@ public static class GameStateManager
         File.WriteAllText(SaveFilePath, json);
     }
 
+    /// <summary>
+    /// Loads the game state from the JSON file.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="GameState"/> object if the file exists and is valid; otherwise, <c>null</c>.
+    /// </returns>
     public static GameState LoadFromFile()
     {
         if (!File.Exists(SaveFilePath))
