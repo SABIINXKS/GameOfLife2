@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
 using LifeEngineLib;
 
 namespace GameOfLife.ConsoleApp
@@ -130,6 +133,33 @@ namespace GameOfLife.ConsoleApp
         }
 
         /// <summary>
+        /// Executes 1000 Game of Life games in parallel using Parallel.ForEach.
+        /// </summary>
+        /// <param name="fieldSize">Size of the field for each game.</param>
+        /// <param name="generations">Number of generations to simulate per game.</param>
+        public void RunParallelGames(int fieldSize = 10, int generations = 100)
+        {
+            var gameIndices = Enumerable.Range(0, 1000);
+            var results = new ConcurrentBag<int>();
+
+            Parallel.ForEach(gameIndices, index =>
+            {
+                var engine = new LifeEngine(fieldSize);
+                engine.InitializeField();
+
+                for (int gen = 0; gen < generations; gen++)
+                {
+                    engine.NextGeneration();
+                }
+
+                int livingCells = engine.GetLivingCellsCount();
+                results.Add(livingCells);
+            });
+
+            Console.WriteLine($"Executed {results.Count} games in parallel.");
+        }
+
+        /// <summary>
         /// Displays the current game field in the console.
         /// </summary>
         /// <param name="field">The game field as a 2D boolean array.</param>
@@ -148,4 +178,3 @@ namespace GameOfLife.ConsoleApp
         }
     }
 }
-
