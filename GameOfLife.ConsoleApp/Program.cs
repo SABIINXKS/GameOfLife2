@@ -7,7 +7,7 @@ namespace GameOfLife.ConsoleApp
         static void Main(string[] args)
         {
             var runner = new GameRunner();
-            runner.RunParallelGames();
+            runner.ShowSelectedGames(8, 10);
         }
     }
 }
