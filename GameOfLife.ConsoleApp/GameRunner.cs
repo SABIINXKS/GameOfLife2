@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using LifeEngineLib;
 
 namespace GameOfLife.ConsoleApp
@@ -12,6 +13,33 @@ namespace GameOfLife.ConsoleApp
     /// </summary>
     public class GameRunner
     {
+        /// <summary>
+        /// Initializes and displays up to 8 selected games on the screen.
+        /// </summary>
+        /// <param name="gameCount">Number of games to display (max 8).</param>
+        /// <param name="fieldSize">Size of each game field.</param>
+        public void ShowSelectedGames(int gameCount = 8, int fieldSize = 10)
+        {
+            if (gameCount < 1 || gameCount > 8)
+                gameCount = 8;
+
+            var games = new List<LifeEngine>();
+            for (int i = 0; i < gameCount; i++)
+            {
+                var engine = new LifeEngine(fieldSize);
+                engine.InitializeField();
+                games.Add(engine);
+            }
+
+            Console.Clear();
+            for (int i = 0; i < games.Count; i++)
+            {
+                Console.WriteLine($"Game {i + 1}:");
+                ShowField(games[i].Field, games[i].Size);
+                Console.WriteLine();
+            }
+        }
+
         /// <summary>
         /// Runs the Game of Life application, managing game state, user input, and game progression.
         /// </summary>
