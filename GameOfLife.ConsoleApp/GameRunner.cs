@@ -16,10 +16,11 @@ namespace GameOfLife.ConsoleApp
         /// <summary>
         /// Initializes and displays up to 8 selected games on the screen.
         /// </summary>
-        /// <param name="gameCount">Number of games to display (max 8).</param>
+        /// <param name="initialFields">List of initial fields (patterns) for each game.</param>
         /// <param name="fieldSize">Size of each game field.</param>
-        public void ShowSelectedGames(int gameCount = 8, int fieldSize = 10)
+        public void ShowSelectedGames(List<bool[,]> initialFields, int fieldSize = 10)
         {
+            int gameCount = initialFields?.Count ?? 0;
             if (gameCount < 1 || gameCount > 8)
                 gameCount = 8;
 
@@ -27,7 +28,10 @@ namespace GameOfLife.ConsoleApp
             for (int i = 0; i < gameCount; i++)
             {
                 var engine = new LifeEngine(fieldSize);
-                engine.InitializeField();
+                if (initialFields != null && initialFields.Count > i && initialFields[i] != null)
+                    engine.Field = initialFields[i];
+                else
+                    engine.InitializeField();
                 games.Add(engine);
             }
 
