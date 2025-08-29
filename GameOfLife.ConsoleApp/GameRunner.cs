@@ -192,6 +192,27 @@ namespace GameOfLife.ConsoleApp
         }
 
         /// <summary>
+        /// Saves all provided games at once.
+        /// </summary>
+        /// <param name="engines">List of LifeEngine instances representing each game.</param>
+        /// <param name="generationCounts">List of generation counts for each game.</param>
+        public void SaveAllGames(List<LifeEngine> engines, List<int> generationCounts)
+        {
+            var states = new List<GameState>();
+            for (int i = 0; i < engines.Count; i++)
+            {
+                states.Add(new GameState
+                {
+                    Size = engines[i].Size,
+                    Field = engines[i].Field,
+                    Generation = generationCounts[i]
+                });
+            }
+            GameStateManager.SaveAllToFile(states);
+            Console.WriteLine("All games have been saved.");
+        }
+
+        /// <summary>
         /// Displays the current game field in the console.
         /// </summary>
         /// <param name="field">The game field as a 2D boolean array.</param>
