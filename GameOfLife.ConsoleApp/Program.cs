@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LifeEngineLib;
+using System;
 using System.Collections.Generic;
 
 namespace GameOfLife.ConsoleApp
@@ -27,6 +28,19 @@ namespace GameOfLife.ConsoleApp
 
             // Show selected games on screen with specified patterns
             runner.ShowSelectedGames(initialFields, 10);
+
+            // Create LifeEngine instances for each game
+            var games = new List<LifeEngine>
+            {
+                new LifeEngine(10) { Field = glider },
+                new LifeEngine(10) { Field = blinker }
+            };
+
+            // Set generation counts for each game (0 for new games)
+            var generationCounts = new List<int> { 0, 0 };
+
+            // Save all games at once
+            runner.SaveAllGames(games, generationCounts);
         }
     }
 }
