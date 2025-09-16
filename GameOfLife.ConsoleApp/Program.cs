@@ -1,6 +1,7 @@
 ﻿using LifeEngineLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameOfLife.ConsoleApp
 {
@@ -10,7 +11,39 @@ namespace GameOfLife.ConsoleApp
         {
             var runner = new GameRunner();
 
-            // Define available patterns
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Welcome to Conway's Game of Life!");
+                Console.WriteLine("1: Start a new game (choose field size)");
+                Console.WriteLine("2: Select a pattern (Glider, Blinker, Block, etc)");
+                Console.WriteLine("q: Quit");
+                Console.Write("Your choice: ");
+                var choice = Console.ReadLine()?.Trim().ToLower();
+
+                if (choice == "1")
+                {
+                    runner.Run();
+                }
+                else if (choice == "2")
+                {
+                    RunPatternSelection(runner);
+                }
+                else if (choice == "q")
+                {
+                    Console.WriteLine("Exiting...");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option. Press Enter to try again.");
+                    Console.ReadLine();
+                }
+            }
+        }
+
+        static void RunPatternSelection(GameRunner runner)
+        {
             var glider = new bool[10, 10];
             glider[1, 2] = true;
             glider[2, 3] = true;
@@ -44,9 +77,11 @@ namespace GameOfLife.ConsoleApp
                 {
                     Console.WriteLine($"{i + 1}: {patterns[i].Name}");
                 }
-                Console.WriteLine("Enter pattern numbers to display (comma separated, max 8), or 'q' to quit:");
-                var input = Console.ReadLine();
-                if (input?.Trim().ToLower() == "q") break;
+
+                Console.WriteLine("Enter pattern numbers to display (comma separated, max 8), or 'b' to go back:");
+                var input = Console.ReadLine()?.Trim().ToLower();
+
+                if (input == "b") return;
 
                 var selectedIndices = new List<int>();
                 foreach (var part in input.Split(','))
@@ -54,6 +89,7 @@ namespace GameOfLife.ConsoleApp
                     if (int.TryParse(part.Trim(), out int idx) && idx >= 1 && idx <= patterns.Count)
                         selectedIndices.Add(idx - 1);
                 }
+
                 if (selectedIndices.Count == 0 || selectedIndices.Count > 8)
                 {
                     Console.WriteLine("Invalid selection. Press Enter to try again.");
@@ -67,35 +103,28 @@ namespace GameOfLife.ConsoleApp
                     initialFields.Add(patterns[idx].Field);
                 }
 
+                // Show selected patterns
                 runner.ShowSelectedGames(initialFields, 10);
 
-                // Create LifeEngine instances for each game
+                // Generate stats
                 var games = new List<LifeEngine>();
                 foreach (var field in initialFields)
                 {
                     games.Add(new LifeEngine(10) { Field = field });
                 }
 
-                // Real-time statistics
                 int liveGames = games.Count;
-                int totalLivingCells = 0;
-                foreach (var game in games)
-                {
-                    totalLivingCells += game.GetLivingCellsCount();
-                }
+                int totalLivingCells = games.Sum(g => g.GetLivingCellsCount());
+
                 Console.WriteLine($"Live games: {liveGames}");
                 Console.WriteLine($"Total living cells: {totalLivingCells}");
 
-                // Set generation counts for each game (0 for new games)
-                var generationCounts = new List<int>();
-                for (int i = 0; i < games.Count; i++) generationCounts.Add(0);
-
-                // Save all games at once
+                var generationCounts = Enumerable.Repeat(0, games.Count).ToList();
                 runner.SaveAllGames(games, generationCounts);
 
-                Console.WriteLine("Press Enter to change selection or 'q' to quit.");
-                var next = Console.ReadLine();
-                if (next?.Trim().ToLower() == "q") break;
+                Console.WriteLine("Press Enter to return to main menu.");
+                Console.ReadLine();
+                return;
             }
         }
     }
