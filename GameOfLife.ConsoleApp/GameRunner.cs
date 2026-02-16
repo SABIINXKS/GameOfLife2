@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Threading;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using LifeEngineLib;
 
 namespace GameOfLife.ConsoleApp
@@ -9,6 +13,37 @@ namespace GameOfLife.ConsoleApp
     /// </summary>
     public class GameRunner
     {
+        /// <summary>
+        /// Initializes and displays up to 8 selected games on the screen.
+        /// </summary>
+        /// <param name="initialFields">List of initial fields (patterns) for each game.</param>
+        /// <param name="fieldSize">Size of each game field.</param>
+        public void ShowSelectedGames(List<bool[,]> initialFields, int fieldSize = 10)
+        {
+            int gameCount = initialFields?.Count ?? 0;
+            if (gameCount < 1 || gameCount > 8)
+                gameCount = 8;
+
+            var games = new List<LifeEngine>();
+            for (int i = 0; i < gameCount; i++)
+            {
+                var engine = new LifeEngine(fieldSize);
+                if (initialFields != null && initialFields.Count > i && initialFields[i] != null)
+                    engine.Field = initialFields[i];
+                else
+                    engine.InitializeField();
+                games.Add(engine);
+            }
+
+            Console.Clear();
+            for (int i = 0; i < games.Count; i++)
+            {
+                Console.WriteLine($"Game {i + 1}:");
+                ShowField(games[i].Field, games[i].Size);
+                Console.WriteLine();
+            }
+        }
+
         /// <summary>
         /// Runs the Game of Life application, managing game state, user input, and game progression.
         /// </summary>
@@ -127,6 +162,54 @@ namespace GameOfLife.ConsoleApp
                     Thread.Sleep(1000);
                 }
             }
+        }
+
+        /// <summary>
+        /// Executes 1000 Game of Life games in parallel using Parallel.ForEach.
+        /// </summary>
+        /// <param name="fieldSize">Size of the field for each game.</param>
+        /// <param name="generations">Number of generations to simulate per game.</param>
+        public void RunParallelGames(int fieldSize = 10, int generations = 100)
+        {
+            var gameIndices = Enumerable.Range(0, 1000);
+            var results = new ConcurrentBag<int>();
+
+            Parallel.ForEach(gameIndices, index =>
+            {
+                var engine = new LifeEngine(fieldSize);
+                engine.InitializeField();
+
+                for (int gen = 0; gen < generations; gen++)
+                {
+                    engine.NextGeneration();
+                }
+
+                int livingCells = engine.GetLivingCellsCount();
+                results.Add(livingCells);
+            });
+
+            Console.WriteLine($"Executed {results.Count} games in parallel.");
+        }
+
+        /// <summary>
+        /// Saves all provided games at once.
+        /// </summary>
+        /// <param name="engines">List of LifeEngine instances representing each game.</param>
+        /// <param name="generationCounts">List of generation counts for each game.</param>
+        public void SaveAllGames(List<LifeEngine> engines, List<int> generationCounts)
+        {
+            var states = new List<GameState>();
+            for (int i = 0; i < engines.Count; i++)
+            {
+                states.Add(new GameState
+                {
+                    Size = engines[i].Size,
+                    Field = engines[i].Field,
+                    Generation = generationCounts[i]
+                });
+            }
+            GameStateManager.SaveAllToFile(states);
+            Console.WriteLine("All games have been saved.");
         }
 
         /// <summary>
